@@ -16,24 +16,29 @@
         body, html {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
             font-family: 'Outfit', sans-serif;
             color: var(--dark-text);
             background-color: transparent; 
-            width: 100%;
-            height: 100%;
-            /* Centers the quiz perfectly in your Genially iframe */
             display: flex;
-            align-items: center; 
-            justify-content: center;
+            /* Allows scrolling if the box is incredibly tiny, preventing clipping */
+            overflow-y: auto; 
+            overflow-x: hidden;
         }
 
         .assessment-container {
+            /* This centers perfectly but prevents top-clipping on overflow */
+            margin: auto; 
             width: 100%;
-            max-width: 1200px; /* Prevents the buttons from getting too long */
+            max-width: 1200px;
             box-sizing: border-box;
             position: relative;
-            container-type: inline-size; 
-            padding: clamp(10px, 4cqi, 30px);
+            /* Using vmin looks at both height and width of the Genially box */
+            padding: clamp(10px, 4vmin, 30px);
         }
 
         .page {
@@ -54,37 +59,35 @@
             color: var(--primary-green);
             text-align: center;
             margin-top: 0;
-            margin-bottom: clamp(20px, 5cqi, 50px);
+            margin-bottom: clamp(15px, 5vmin, 40px);
             font-weight: 600;
-            /* Increased maximum size */
-            font-size: clamp(1.5rem, 6cqi, 4rem); 
+            /* Lowered the minimum limit so it can shrink further */
+            font-size: clamp(1.1rem, 6vmin, 3.5rem); 
         }
 
         .question-wrapper {
-            margin-bottom: clamp(15px, 4cqi, 40px);
+            margin-bottom: clamp(15px, 4vmin, 30px);
         }
 
         .question-text {
             font-weight: 600;
-            margin-bottom: clamp(15px, 3cqi, 25px);
-            /* Increased maximum size */
-            font-size: clamp(1.2rem, 5cqi, 3rem); 
+            margin-bottom: clamp(10px, 3vmin, 20px);
+            font-size: clamp(1rem, 4.5vmin, 2.5rem); 
         }
 
         .options-container {
             display: flex;
             flex-direction: column;
-            gap: clamp(10px, 2.5cqi, 20px);
+            gap: clamp(8px, 2.5vmin, 16px);
         }
 
         .option-btn {
             font-family: 'Outfit', sans-serif;
-            /* Increased maximum size */
-            font-size: clamp(1rem, 4.5cqi, 2.2rem); 
+            font-size: clamp(0.85rem, 4vmin, 2rem); 
             background-color: #ffffff; 
             color: var(--dark-text);
             border: 2px solid var(--primary-green);
-            padding: clamp(12px, 3cqi, 25px) clamp(20px, 4cqi, 40px);
+            padding: clamp(10px, 3vmin, 20px) clamp(15px, 4vmin, 30px);
             border-radius: 12px;
             cursor: pointer;
             text-align: left;
@@ -120,11 +123,11 @@
         }
 
         .feedback-message {
-            margin-top: clamp(20px, 4cqi, 40px);
-            padding: clamp(15px, 3cqi, 25px);
+            margin-top: clamp(15px, 4vmin, 30px);
+            padding: clamp(10px, 3vmin, 20px);
             border-radius: 12px;
             font-weight: 600;
-            font-size: clamp(1rem, 4.5cqi, 2.2rem); 
+            font-size: clamp(0.85rem, 4vmin, 2rem); 
             display: none;
             line-height: 1.4;
         }
@@ -145,15 +148,15 @@
 
         .next-btn {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(1rem, 4.5cqi, 2.2rem); 
+            font-size: clamp(0.85rem, 4vmin, 2rem); 
             font-weight: 600;
             background-color: var(--primary-green);
             color: #ffffff;
             border: none;
-            padding: clamp(12px, 3cqi, 25px) clamp(24px, 5cqi, 45px);
+            padding: clamp(10px, 3vmin, 20px) clamp(16px, 5vmin, 35px);
             border-radius: 12px;
             cursor: pointer;
-            margin-top: clamp(20px, 4cqi, 40px);
+            margin-top: clamp(15px, 4vmin, 30px);
             display: none;
             float: right;
             transition: background-color 0.2s;
@@ -213,7 +216,6 @@
             const nextButton = document.getElementById('next-' + questionNumber);
 
             if (isCorrect) {
-                // Disable all buttons once the correct answer is found
                 buttons.forEach(btn => {
                     btn.disabled = true;
                 });
@@ -222,12 +224,10 @@
                 feedbackBox.textContent = "Spot on! That is the correct answer.";
                 feedbackBox.className = "feedback-message correct";
                 
-                // Show the next button if it exists
                 if (nextButton) {
                     nextButton.style.display = "block";
                 }
             } else {
-                // Disable only the clicked wrong button so they can try again
                 selectedButton.disabled = true;
                 selectedButton.classList.add('selected-incorrect');
                 feedbackBox.textContent = "Not quite, give it another try.";
