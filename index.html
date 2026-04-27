@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prior Knowledge Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-green: #77a766;
+            --accent-yellow: #e8d227;
+            --dark-text: #232323;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            color: var(--dark-text);
+            background-color: transparent; 
+            width: 100%;
+            height: 100%;
+        }
+
+        .assessment-container {
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            padding: clamp(10px, 2vw, 20px);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: var(--primary-green);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: clamp(15px, 4vw, 30px);
+            font-weight: 600;
+            font-size: clamp(1.5rem, 5vw, 2.2rem); 
+        }
+
+        .question-wrapper {
+            margin-bottom: clamp(15px, 3vw, 20px);
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: clamp(10px, 2.5vw, 15px);
+            font-size: clamp(1.2rem, 4vw, 1.6rem); 
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 2vw, 12px);
+        }
+
+        .option-btn {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1rem, 3.5vw, 1.2rem); 
+            background-color: #ffffff; 
+            color: var(--dark-text);
+            border: 2px solid var(--primary-green);
+            padding: clamp(10px, 2.5vw, 15px) clamp(15px, 3.5vw, 20px);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--primary-green);
+            color: #ffffff;
+        }
+
+        .option-btn.selected-correct {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            border-color: var(--primary-green);
+        }
+
+        .option-btn.selected-incorrect {
+            background-color: var(--accent-yellow);
+            color: var(--dark-text);
+            border-color: var(--accent-yellow);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .option-btn.selected-correct:disabled, 
+        .option-btn.selected-incorrect:disabled {
+            opacity: 1;
+        }
+
+        .feedback-message {
+            margin-top: clamp(15px, 3vw, 20px);
+            padding: clamp(10px, 2.5vw, 15px);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: clamp(1rem, 3.5vw, 1.15rem); 
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-message.correct {
+            display: block;
+            background-color: #eaf3e6;
+            color: var(--primary-green);
+            border-left: 5px solid var(--primary-green);
+        }
+
+        .feedback-message.incorrect {
+            display: block;
+            background-color: #fdfbe9;
+            color: var(--dark-text);
+            border-left: 5px solid var(--accent-yellow);
+        }
+
+        .next-btn {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1rem, 3.5vw, 1.2rem); 
+            font-weight: 600;
+            background-color: var(--primary-green);
+            color: #ffffff;
+            border: none;
+            padding: clamp(10px, 2vw, 12px) clamp(16px, 4vw, 24px);
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: clamp(15px, 3vw, 20px);
+            display: none;
+            float: right;
+            transition: background-color 0.2s;
+        }
+
+        .next-btn:hover {
+            background-color: #5c844d;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="assessment-container clearfix">
+        
+        <div class="page active" id="page-1">
+            <h2>Choose the correct option.</h2>
+            <div class="question-wrapper">
+                <div class="question-text">1. Which statement best describes an algorithm?</div>
+                <div class="options-container" id="opts-1">
+                    <button class="option-btn" onclick="selectAnswer(1, this, false)">A random set of instructions</button>
+                    <button class="option-btn" onclick="selectAnswer(1, this, true)">A sequence of steps to solve a problem</button>
+                    <button class="option-btn" onclick="selectAnswer(1, this, false)">A computer program only</button>
+                    <button class="option-btn" onclick="selectAnswer(1, this, false)">A list of numbers</button>
+                </div>
+                <div class="feedback-message" id="feed-1"></div>
+                <button class="next-btn" id="next-1" onclick="goToPage(2)">Next question</button>
+            </div>
+        </div>
+
+        <div class="page" id="page-2">
+            <h2>Choose the correct option.</h2>
+            <div class="question-wrapper">
+                <div class="question-text">2. What is important when writing steps to complete a task?</div>
+                <div class="options-container" id="opts-2">
+                    <button class="option-btn" onclick="selectAnswer(2, this, false)">Steps can be in any order</button>
+                    <button class="option-btn" onclick="selectAnswer(2, this, true)">Steps must be clear and in the correct order</button>
+                    <button class="option-btn" onclick="selectAnswer(2, this, false)">Steps should be as long as possible</button>
+                    <button class="option-btn" onclick="selectAnswer(2, this, false)">Steps should only use numbers</button>
+                </div>
+                <div class="feedback-message" id="feed-2"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function selectAnswer(questionNumber, selectedButton, isCorrect) {
+            const container = document.getElementById('opts-' + questionNumber);
+            const buttons = container.querySelectorAll('.option-btn');
+            const feedbackBox = document.getElementById('feed-' + questionNumber);
+            const nextButton = document.getElementById('next-' + questionNumber);
+
+            if (isCorrect) {
+                // Disable all buttons once the correct answer is found
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                selectedButton.classList.add('selected-correct');
+                feedbackBox.textContent = "Spot on! That is the correct answer.";
+                feedbackBox.className = "feedback-message correct";
+                
+                // Show the next button if it exists
+                if (nextButton) {
+                    nextButton.style.display = "block";
+                }
+            } else {
+                // Disable only the clicked wrong button so they can try again
+                selectedButton.disabled = true;
+                selectedButton.classList.add('selected-incorrect');
+                feedbackBox.textContent = "Not quite, give it another try.";
+                feedbackBox.className = "feedback-message incorrect";
+            }
+        }
+
+        function goToPage(pageNumber) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const targetPage = document.getElementById('page-' + pageNumber);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
